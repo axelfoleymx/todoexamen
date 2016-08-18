@@ -11,9 +11,42 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20160818004915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "classrooms", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "curse_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "classrooms", ["curse_id"], name: "index_classrooms_on_curse_id", using: :btree
+
+  create_table "curses", force: :cascade do |t|
+    t.string   "name"
+    t.date     "date"
+    t.float    "price"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "classroom_id"
+  end
+
+  add_index "curses", ["classroom_id"], name: "index_curses_on_classroom_id", using: :btree
+
+  create_table "students", force: :cascade do |t|
+    t.string   "name"
+    t.float    "age"
+    t.integer  "curse_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "students", ["curse_id"], name: "index_students_on_curse_id", using: :btree
+
+  add_foreign_key "classrooms", "curses"
+  add_foreign_key "curses", "classrooms"
+  add_foreign_key "students", "curses"
 end
